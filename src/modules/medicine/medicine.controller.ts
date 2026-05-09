@@ -2,6 +2,25 @@ import { Request, Response } from "express";
 import { medicineService } from "./medicine.service";
 
 
+const getAllMedicine = async(req: Request, res: Response) =>{
+    try{
+        const result = await medicineService.getAllMedicine();
+
+        res.status(200).json({
+            success: true,
+            message: "successfully get all medicine data",
+            data: result
+        })
+
+    }catch(err){
+        res.status(404).json({
+            success: false,
+            message: "failed to get all medicine data",
+            error: err
+        })
+    }
+}
+
 const createMedicine = async(req: Request, res: Response) =>{
     try{
         console.log(req.user)
@@ -29,5 +48,6 @@ const createMedicine = async(req: Request, res: Response) =>{
 }
 
 export const medicineController = {
+    getAllMedicine,
     createMedicine
 }
