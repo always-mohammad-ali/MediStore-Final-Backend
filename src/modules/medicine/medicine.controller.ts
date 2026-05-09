@@ -1,0 +1,33 @@
+import { Request, Response } from "express";
+import { medicineService } from "./medicine.service";
+
+
+const createMedicine = async(req: Request, res: Response) =>{
+    try{
+        console.log(req.user)
+
+        const user = req.user;
+
+        if(!user){
+            return res.status(404).json({
+                error: "unauthorized"
+            })
+        }
+
+        const result = await medicineService.createMedicine(req.body, user.id as string)
+
+        res.status(201).json({
+            result
+        })
+    }catch(error){
+        res.status(404).json({
+            message : "medicine creation failed",
+            error : error
+        })
+    }
+    
+}
+
+export const medicineController = {
+    createMedicine
+}
