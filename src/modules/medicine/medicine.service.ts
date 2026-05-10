@@ -5,11 +5,22 @@ import { prisma } from "../../lib/prisma"
 const getAllMedicine = async(payload : {search : string | undefined}) =>{
     const result = await prisma.medicine.findMany({
         where:{
+            OR:[
+            {  
             medicineName:{
                 contains : payload.search as string,
                 mode: "insensitive"
             }
-
+           },
+           
+           {
+            description:{
+                contains : payload.search as string,
+                mode: "insensitive"
+            }
+           }
+        
+            ]
             
         }
         
