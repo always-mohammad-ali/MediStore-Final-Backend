@@ -4,7 +4,12 @@ import { medicineService } from "./medicine.service";
 
 const getAllMedicine = async(req: Request, res: Response) =>{
     try{
-        const result = await medicineService.getAllMedicine();
+
+        const { search } = req.query;
+        const searchString = typeof search === "string" ? search : undefined;
+
+      //  console.log("searched key is: ", search);
+        const result = await medicineService.getAllMedicine({search : searchString});
 
         res.status(200).json({
             success: true,
