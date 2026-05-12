@@ -8,8 +8,10 @@ const getAllMedicine = async(req: Request, res: Response) =>{
         const { search } = req.query;
         const searchString = typeof search === "string" ? search : undefined;
 
+        const tags = req.query.tags ? (req.query.tags as string).split(",") : [] ;
+
       //  console.log("searched key is: ", search);
-        const result = await medicineService.getAllMedicine({search : searchString});
+        const result = await medicineService.getAllMedicine({search : searchString, tags});
 
         res.status(200).json({
             success: true,
