@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { medicineService } from "./medicine.service";
+import { MEDICINESTATUS } from "../../../generated/prisma/enums";
 
 
 const getAllMedicine = async(req: Request, res: Response) =>{
@@ -20,8 +21,12 @@ const getAllMedicine = async(req: Request, res: Response) =>{
 
         //console.log({isFeatured});
 
+        const status = req.query.status as MEDICINESTATUS | undefined;
+
+        const userId = req.query.userId as string | undefined;
+
      
-        const result = await medicineService.getAllMedicine({search : searchString, tags, isFeatured});
+        const result = await medicineService.getAllMedicine({search : searchString, tags, isFeatured, status, userId});
 
         res.status(200).json({
             success: true,

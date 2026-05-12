@@ -26,12 +26,18 @@ model Medicine {
 
   userId String
   isFeatured Boolean @default(false)
-
+  status MEDICINESTATUS @default(PUBLISHED)
   order  Order[]
   review Review[]
-
+  
   @@index([medicineName])
   @@map("medicines")
+}
+
+enum MEDICINESTATUS{
+  ARCHIVED
+  PUBLISHED
+  DRAFT
 }
 
 model Order {

@@ -1,9 +1,9 @@
-import { Medicine } from "../../../generated/prisma/client"
+import { Medicine, MEDICINESTATUS } from "../../../generated/prisma/client"
 import { MedicineWhereInput } from "../../../generated/prisma/models";
 import { prisma } from "../../lib/prisma"
 
 
-const getAllMedicine = async({search, tags, isFeatured} : {search : string | undefined, tags : string[] | [], isFeatured : boolean | undefined}) =>{
+const getAllMedicine = async({search, tags, isFeatured, status, userId} : {search : string | undefined, tags : string[] | [], isFeatured : boolean | undefined, status : MEDICINESTATUS | undefined, userId : string | undefined}) =>{
      const andConditions : MedicineWhereInput[] = [];
 
      if(search){
@@ -46,6 +46,18 @@ const getAllMedicine = async({search, tags, isFeatured} : {search : string | und
      if(typeof isFeatured === 'boolean'){
         andConditions.push({
             isFeatured : isFeatured //you can just use isFeatured in this line instead of isFeatured : isFeatured
+        })
+     }
+
+     if(status){
+        andConditions.push({
+            status
+        })
+     }
+
+     if(userId){
+        andConditions.push({
+            userId
         })
      }
 
