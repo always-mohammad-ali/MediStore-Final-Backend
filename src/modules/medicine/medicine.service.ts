@@ -3,7 +3,7 @@ import { MedicineWhereInput } from "../../../generated/prisma/models";
 import { prisma } from "../../lib/prisma"
 
 
-const getAllMedicine = async({search, tags} : {search : string | undefined, tags : string[] | []}) =>{
+const getAllMedicine = async({search, tags, isFeatured} : {search : string | undefined, tags : string[] | [], isFeatured : boolean | undefined}) =>{
      const andConditions : MedicineWhereInput[] = [];
 
      if(search){
@@ -40,6 +40,12 @@ const getAllMedicine = async({search, tags} : {search : string | undefined, tags
             tags:{
                 hasEvery: tags
             }
+        })
+     }
+
+     if(typeof isFeatured === 'boolean'){
+        andConditions.push({
+            isFeatured : isFeatured //you can just use isFeatured in this line instead of isFeatured : isFeatured
         })
      }
 

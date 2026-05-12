@@ -6,12 +6,22 @@ const getAllMedicine = async(req: Request, res: Response) =>{
     try{
 
         const { search } = req.query;
+         //  console.log("searched key is: ", search);
         const searchString = typeof search === "string" ? search : undefined;
-
+        
         const tags = req.query.tags ? (req.query.tags as string).split(",") : [] ;
 
-      //  console.log("searched key is: ", search);
-        const result = await medicineService.getAllMedicine({search : searchString, tags});
+        const isFeatured = req.query.isFeatured 
+        ? req.query.isFeatured === 'true' 
+        ? true 
+          : req.query.isFeatured === 'false' 
+          ? false : undefined 
+        : undefined;
+
+        //console.log({isFeatured});
+
+     
+        const result = await medicineService.getAllMedicine({search : searchString, tags, isFeatured});
 
         res.status(200).json({
             success: true,
