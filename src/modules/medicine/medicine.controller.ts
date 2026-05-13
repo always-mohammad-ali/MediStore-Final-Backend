@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { medicineService } from "./medicine.service";
 import { MEDICINESTATUS } from "../../../generated/prisma/enums";
+import paginationSortingHelper from "../../helpers/paginationSortingHelper";
 
 
 const getAllMedicine = async(req: Request, res: Response) =>{
@@ -24,9 +25,19 @@ const getAllMedicine = async(req: Request, res: Response) =>{
         const status = req.query.status as MEDICINESTATUS | undefined;
 
         const userId = req.query.userId as string | undefined;
+        
+        const page = Number(req.query.page ?? 1);
+        const limit = Number(req.query.limit ?? 10);
+        
+        const skip = (page - 1) * limit;
+
+        const sortBy = req.query.sortBy as string | undefined;
+        const sortOrder = req.query.sortOrder as string | undefined;
+
+        const options = paginationSortingHelper(req.query);
 
      
-        const result = await medicineService.getAllMedicine({search : searchString, tags, isFeatured, status, userId});
+        const result = await medicineService.getAllMedicine({search : searchString, tags, isFeatured, status, userId, page, limit, skip, sortBy, sortOrder});
 
         res.status(200).json({
             success: true,

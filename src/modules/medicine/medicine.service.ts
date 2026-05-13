@@ -3,7 +3,7 @@ import { MedicineWhereInput } from "../../../generated/prisma/models";
 import { prisma } from "../../lib/prisma"
 
 
-const getAllMedicine = async({search, tags, isFeatured, status, userId} : {search : string | undefined, tags : string[] | [], isFeatured : boolean | undefined, status : MEDICINESTATUS | undefined, userId : string | undefined}) =>{
+const getAllMedicine = async({search, tags, isFeatured, status, userId, page, limit, skip, sortBy, sortOrder} : {search : string | undefined, tags : string[] | [], isFeatured : boolean | undefined, status : MEDICINESTATUS | undefined, userId : string | undefined, page : number, limit: number, skip : number, sortBy : string | undefined, sortOrder : string | undefined}) =>{
      const andConditions : MedicineWhereInput[] = [];
 
      if(search){
@@ -63,10 +63,14 @@ const getAllMedicine = async({search, tags, isFeatured, status, userId} : {searc
 
 
     const result = await prisma.medicine.findMany({
+        take: limit,
+        skip,
         where:{
+            
             AND: andConditions
             
-        }
+        },
+        orderBy: sortBy && sortOrder ? { [sortBy] : sortOrder} : {createdAt : "desc"}
         
     });
     return result;
