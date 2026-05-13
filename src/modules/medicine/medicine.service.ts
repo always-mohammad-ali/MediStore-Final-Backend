@@ -72,7 +72,7 @@ const getAllMedicine = async({search, tags, isFeatured, status, userId, page, li
      }
 
 
-    const result = await prisma.medicine.findMany({
+    const allMedicine = await prisma.medicine.findMany({
         take: limit,
         skip,
         where:{
@@ -84,7 +84,23 @@ const getAllMedicine = async({search, tags, isFeatured, status, userId, page, li
         }
         
     });
-    return result;
+
+    const total = await prisma.medicine.count({
+
+        where:{
+            AND: andConditions
+        }
+    })
+
+    return {
+        data: allMedicine,
+        pagination :{
+            total,
+            page,
+            limit,
+            totalPages: Math.ceil(total/limit)
+        }
+      }
 }
 
 
