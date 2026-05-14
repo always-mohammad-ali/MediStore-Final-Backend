@@ -2,6 +2,31 @@
 
 import { Request, Response } from "express";
 import { reviewService } from "./review.service";
+import { success } from "better-auth";
+
+
+const getReviewById = async(req : Request, res : Response) =>{
+    try{
+
+        const { reviewId } = req.params;
+
+        const result = await reviewService.getReviewById(reviewId as string);
+
+        res.status(200).json({
+            success : true,
+            message : "get review details successfully by reviewId",
+            data : result
+        })
+
+
+    }catch(error){
+        res.status(404).json({
+            success : false,
+            message : "review id fetch failed",
+            details : error
+        })
+    }
+}
 
 
 const createReview = async(req : Request, res : Response) =>{
@@ -29,5 +54,6 @@ const createReview = async(req : Request, res : Response) =>{
 }
 
 export const reviewController = {
+    getReviewById,
     createReview
 }

@@ -1,6 +1,24 @@
 import { prisma } from "../../lib/prisma";
 
 
+const getReviewById = async(reviewId :string) =>{
+     return await prisma.review.findUnique({
+        where :{
+            id : reviewId
+        },
+        include : {
+            medicine : {
+                select : {
+                    id : true,
+                    medicineName : true,
+                    views : true
+                }
+            }
+        }
+     })
+}
+
+
 const createReview = async(payload : {
    description ?: string,
    rating : number,
@@ -34,5 +52,6 @@ const createReview = async(payload : {
 }
 
 export const reviewService = {
+    getReviewById,
     createReview
 }
