@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { medicineService } from "./medicine.service";
 import { MEDICINESTATUS } from "../../../generated/prisma/enums";
 import paginationSortingHelper from "../../helpers/paginationSortingHelper";
+import { success } from "better-auth";
 
 
 const getAllMedicine = async(req: Request, res: Response) =>{
@@ -57,6 +58,43 @@ const getAllMedicine = async(req: Request, res: Response) =>{
     }
 }
 
+//get single medicine
+
+const getSingleMedicine = async(req : Request, res : Response) =>{
+
+          try{
+             const { medicineId } = req.params;
+
+          if(!medicineId){
+            throw new Error("you have to give proper valid medicine id");
+          }
+
+            const result = await medicineService.getSingleMedicine(medicineId as string);
+
+            res.status(201).json({
+                success: true,
+                message: "retrieve single medicine id successfully",
+                data:result
+            })
+
+          }catch(error: any){
+            console.log(error);
+            console.log(error.message);
+            console.log(error.meta);
+
+            res.status(401).json({
+               success: false,
+               message: "failed to get medicine id",
+               error: error,
+             });
+          }
+
+
+}
+
+
+//create Medicine
+
 const createMedicine = async(req: Request, res: Response) =>{
     try{
         console.log(req.user)
@@ -85,5 +123,6 @@ const createMedicine = async(req: Request, res: Response) =>{
 
 export const medicineController = {
     getAllMedicine,
+    getSingleMedicine,
     createMedicine
 }

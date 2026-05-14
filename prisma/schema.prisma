@@ -10,6 +10,8 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  
+
 }
 
 model Medicine {
@@ -27,8 +29,10 @@ model Medicine {
   userId String
   isFeatured Boolean @default(false)
   status MEDICINESTATUS @default(PUBLISHED)
-  order  Order[]
+  views Int @default(0)
   review Review[]
+
+  items OrderItem[]
   
   @@index([medicineName])
   @@map("medicines")
@@ -46,10 +50,11 @@ model Order {
   location    String   @db.VarChar(250)
   orderStatus STATUS   @default(PENDING)
   userId      String //better-auth
-  medicineId  String
-  medicine    Medicine @relation(fields: [medicineId], references: [id])
+
 
   review Review[]
+  
+  items OrderItem[]
 
   @@index([orderStatus])
   @@map("orders")
@@ -59,6 +64,27 @@ enum STATUS {
   PENDING
   COMPLETE
   FAILED
+}
+
+model OrderItem{
+  id String @id @default(uuid())
+
+  orderId String
+  order Order @relation(fields: [orderId], references: [id])
+
+  medicineId String
+  medicine Medicine @relation(fields: [medicineId], references: [id])
+
+  quantity Int
+  price Int
+
+  createdAt DateTime @default(now())
+
+  @@index([orderId])
+  @@index([medicineId])
+
+  @@map("Order-Items")
+  
 }
 
 model Category {
@@ -85,13 +111,18 @@ model Review {
   description String? @db.Text
   rating      Float?
 
-  userId String?
+  userId String  //better auth
 
   orderId String
   order   Order  @relation(fields: [orderId], references: [id])
 
   medicineId String
   medicine   Medicine @relation(fields: [medicineId], references: [id])
+
+  parentId String?
+  parent Review? @relation("ReviewReply", fields: [parentId], references: [id])
+  reviewReply Review[] @relation("ReviewReply")
+
 
   @@index([rating])
   @@map("reviews")
