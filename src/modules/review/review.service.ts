@@ -6,7 +6,7 @@ const createReview = async(payload : {
    rating : number,
    userId : string,
    medicineId : string,
-   parentId : string
+   parentId ?: string
 
  }) =>{
      //console.log("review all data is", payload);

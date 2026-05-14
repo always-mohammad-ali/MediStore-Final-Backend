@@ -107,9 +107,7 @@ const getAllMedicine = async({search, tags, isFeatured, status, userId, page, li
 
 const getSingleMedicine = async(medicineId : string) =>{
 
-   const result = await prisma.$transaction(async (tx) =>{
-   // const updateCount = await prisma.medicine.update()
-       await tx.medicine.update({
+   const result = await prisma.medicine.update({
         where:{
             id : medicineId
         },
@@ -119,9 +117,10 @@ const getSingleMedicine = async(medicineId : string) =>{
             }
         }
     })
+    
+    return result;
 
-
-    const medicineData = await tx.medicine.findUnique({
+    const medicineData = await prisma.medicine.findUnique({
         where : {
             id : medicineId
         }
@@ -129,9 +128,7 @@ const getSingleMedicine = async(medicineId : string) =>{
      
     return medicineData;
 
-   })
 
-    return result;
 }
 
 
