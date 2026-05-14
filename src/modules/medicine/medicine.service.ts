@@ -1,4 +1,4 @@
-import { Medicine, MEDICINESTATUS } from "../../../generated/prisma/client"
+import { Medicine, MEDICINESTATUS, REVIEWSTATUS } from "../../../generated/prisma/client"
 import { MedicineWhereInput } from "../../../generated/prisma/models";
 import { prisma } from "../../lib/prisma"
 
@@ -81,6 +81,11 @@ const getAllMedicine = async({search, tags, isFeatured, status, userId, page, li
             
         },
         orderBy:{ [sortBy] : sortOrder
+        },
+        include: {
+            _count : {
+                select : { review : true }
+            }
         }
         
     });
@@ -106,8 +111,9 @@ const getAllMedicine = async({search, tags, isFeatured, status, userId, page, li
 //GET SINGLE MEDICINE
 
 const getSingleMedicine = async(medicineId : string) =>{
+ 
 
-   const result = await prisma.medicine.update({
+   const updateViewsCount = await prisma.medicine.update({
         where:{
             id : medicineId
         },
@@ -117,16 +123,46 @@ const getSingleMedicine = async(medicineId : string) =>{
             }
         }
     })
-    
-    return result;
 
-    const medicineData = await prisma.medicine.findUnique({
+
+     const updatedMedicineData =  await prisma.medicine.findUniqueOrThrow({
         where : {
             id : medicineId
+        },
+        include:{
+            review : {
+                where :{
+                    parentId : null,
+                    reviewStatus : REVIEWSTATUS.APPROVED
+                },
+                orderBy :{ createdAt : "desc"  },
+                include :{
+                        reviewReply : {
+                            where :{
+                              reviewStatus : REVIEWSTATUS.APPROVED
+                            },
+                            orderBy:{ createdAt : "asc" },
+                            include :{
+                                reviewReply: {
+                                    where : {
+                                        reviewStatus : REVIEWSTATUS.APPROVED
+                                    },
+                                    orderBy : { createdAt : "asc"}
+                                }
+                            }
+                        }          
+                }
+            },
+            _count : { 
+                select : { review : true}
+            }
         }
     })
+
      
-    return medicineData;
+    return updatedMedicineData;
+
+   
 
 
 }

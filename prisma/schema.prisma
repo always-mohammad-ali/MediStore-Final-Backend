@@ -110,6 +110,8 @@ model Review {
   id          String  @id @default(uuid())
   description String? @db.Text
   rating      Float?
+  reviewStatus REVIEWSTATUS @default(APPROVED)
+  createdAt DateTime @default(now())
 
   userId String  //better auth
 
@@ -126,6 +128,11 @@ model Review {
 
   @@index([rating])
   @@map("reviews")
+}
+
+enum REVIEWSTATUS {
+  APPROVED
+  BANNED
 }
 
 model User {
