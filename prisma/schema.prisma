@@ -113,8 +113,8 @@ model Review {
 
   userId String  //better auth
 
-  orderId String
-  order   Order  @relation(fields: [orderId], references: [id])
+  orderId String?
+  order   Order?  @relation(fields: [orderId], references: [id])
 
   medicineId String
   medicine   Medicine @relation(fields: [medicineId], references: [id])
