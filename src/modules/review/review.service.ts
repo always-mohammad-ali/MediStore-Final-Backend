@@ -122,11 +122,19 @@ const updateReview = async(reviewId : string, userId : string, reviewData : {des
 
 const moderateReview = async(reviewId : string, reviewData : {reviewStatus : REVIEWSTATUS}) =>{
     
-    await prisma.review.findUniqueOrThrow({
+   const reviewDatax =  await prisma.review.findUniqueOrThrow({
         where : {
             id : reviewId
+        },
+        select : {
+            id : true,
+            reviewStatus : true
         }
     })
+
+    if(reviewDatax.reviewStatus === reviewData.reviewStatus){
+        throw new Error(`your changed (${reviewData.reviewStatus}) is already given`)
+    }
 
     return await prisma.review.update({
         where :{

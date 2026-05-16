@@ -139,10 +139,13 @@ const moderateReview = async(req : Request, res : Response) =>{
       })
 
 
-    }catch(error){
+    }catch(error ){
+        
+        const errorMessage = error instanceof Error ? error.message : "modify review status by admin failed" ;
+
         res.status(404).json({
             success : false,
-            message : "modify review status by admin failed",
+            message : errorMessage,
             details : error
         })
     }
