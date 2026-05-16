@@ -93,9 +93,36 @@ const deleteReview = async(reviewId : string, userId : string) =>{
 
 }
 
+const updateReview = async(reviewId : string, userId : string, reviewData : {description ?: string, rating ?: number}) => {
+      const reviewDatax = await prisma.review.findFirst({
+        where : {
+            id : reviewId,
+            userId : userId
+        },
+        select:{
+            id : true,
+            userId : true
+        }
+      })
+
+      if(!reviewDatax){
+        throw new Error("review id or userId doesn't match")
+      }
+
+     return await prisma.review.update({
+        where : {
+            id : reviewDatax.id,
+            userId : reviewDatax.userId
+        },
+      data : reviewData
+     })
+
+}
+
 export const reviewService = {
     getReviewById,
     getReviewsByUserId,
     createReview,
-    deleteReview
+    deleteReview,
+    updateReview
 }

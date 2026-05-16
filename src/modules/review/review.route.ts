@@ -12,6 +12,8 @@ router.post("/", auth(UserRole.CUSTOMER, UserRole.ADMIN), reviewController.creat
 
 router.delete("/:reviewId", auth(UserRole.CUSTOMER, UserRole.ADMIN), reviewController.deleteReview);
 
+router.patch("/:reviewId", auth(UserRole.CUSTOMER, UserRole.ADMIN), reviewController.updateReview);
+
 
 
 

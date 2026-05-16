@@ -5,6 +5,7 @@ import { reviewService } from "./review.service";
 import { success } from "better-auth";
 
 
+
 const getReviewById = async(req : Request, res : Response) =>{
     try{
 
@@ -99,9 +100,35 @@ const deleteReview = async(req : Request, res : Response) => {
       }
 }
 
+const updateReview = async(req : Request, res : Response) =>{
+      try{
+        
+        const { reviewId } = req.params;
+    
+        const user = req.user;
+
+        const result = await reviewService.updateReview(reviewId as string, user?.id as string, req.body);
+
+        res.status(201).json({
+            success : true,
+            message : "update review data using id successful",
+            data : result
+        })
+
+
+      }catch(error){
+        res.status(404).json({
+            success: false,
+            message: "update review using id falied",
+            details: error
+        })
+      }
+}
+
 export const reviewController = {
     getReviewById,
     getReviewsByUserId,
     createReview,
-    deleteReview
+    deleteReview,
+    updateReview
 }
