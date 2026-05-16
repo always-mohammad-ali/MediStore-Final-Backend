@@ -168,15 +168,54 @@ const getSingleMedicine = async(medicineId : string) =>{
 }
 
 const getMyMedicine = async(userId : string) =>{
-    return await prisma.medicine.findMany({
+    
+    await prisma.user.findUniqueOrThrow({
+        where : {
+            id : userId,
+            status : "ACTIVE"
+        }, 
+        select : {
+            id : true
+        }
+    })
+    
+
+    const result =  await prisma.medicine.findMany({
         where : {
             userId : userId
         },
         orderBy : {
             createdAt : "desc"
+        },
+        include :{
+            _count : {
+                select : {
+                    review : true
+                }
+            }
         }
         
     })
+
+   /* const totalMedicinePosted = await prisma.medicine.count({
+        where : {
+            userId : userId
+        }
+    }) */
+
+    const totalMedicinePosted = await prisma.medicine.aggregate({
+        where : {
+            userId : userId
+        },
+        _count : {
+            userId : true
+        }
+    })
+
+    return {
+        data : result,
+        totalMedicinePosted
+    }
 }
 
 
