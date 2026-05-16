@@ -149,10 +149,43 @@ const createMedicine = async(req: Request, res: Response) =>{
     
 }
 
+
+//update Medicine
+
+const updateMedicine = async(req : Request, res : Response) =>{
+    try{
+
+        const user = req.user;
+
+        if(!user){
+            throw new Error("you are unauthorized")
+        }
+
+        const { medicineId } = req.params;
+
+        const result = await medicineService.updateMedicine(user.id as string, medicineId as string, req.body)
+
+        res.status(201).json({
+            success : true,
+            message : "update medicine data successfully",
+            data : result
+        })
+
+    }catch(error){
+        const errorMessage = (error instanceof Error) ? error.message : "update medicine post failed"
+        res.status(404).json({
+            success : false,
+            message : errorMessage,
+            details : error
+        })
+    }
+}
+
 export const medicineController = {
     getAllMedicine,
     getSingleMedicine,
     getMyMedicine,
-    createMedicine
+    createMedicine,
+    updateMedicine
 
 }

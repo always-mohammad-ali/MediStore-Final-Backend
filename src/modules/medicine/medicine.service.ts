@@ -231,9 +231,35 @@ const createMedicine = async(data: Omit <Medicine, "id" | "createdAt" | "updated
     return result;
 }
 
+//UPDATE MEDICINE
+
+const updateMedicine = async(userId : string, medicineId : string, medicineData : Partial<Medicine>) =>{
+    const medicineDatax = await prisma.medicine.findUniqueOrThrow({
+        where : {
+            id : medicineId
+        },
+        select : {
+            id : true,
+            userId : true,
+        }
+    })
+
+    if(medicineDatax.userId !== userId){
+        throw new Error("you don't have permission to update data as you id doesn't match with medicine-posts id");
+    }
+
+    return await prisma.medicine.update({
+        where : {
+            id : medicineId
+        },
+        data : medicineData
+    })
+}
+
 export const medicineService = {
     getAllMedicine,
     getSingleMedicine,
     getMyMedicine,
-    createMedicine
+    createMedicine,
+    updateMedicine
 }
