@@ -10,6 +10,8 @@ router.get("/user/:userId", reviewController.getReviewsByUserId);
 
 router.post("/", auth(UserRole.CUSTOMER, UserRole.ADMIN), reviewController.createReview);
 
+router.delete("/:reviewId", auth(UserRole.CUSTOMER, UserRole.ADMIN), reviewController.deleteReview);
+
 
 
 

@@ -74,8 +74,34 @@ const createReview = async(req : Request, res : Response) =>{
     }
 }
 
+
+const deleteReview = async(req : Request, res : Response) => {
+      try{
+
+        const { reviewId } = req.params;
+
+        const user = req.user;
+
+        const result = await reviewService.deleteReview(reviewId as string, user?.id as string);
+
+        res.status(200).json({
+            success : true,
+            message : "delete review using id successful",
+            data : result
+        })
+
+      }catch(error){
+        res.status(404).json({
+            success : false,
+            message : "delete review using id failed",
+            details : error
+        })    
+      }
+}
+
 export const reviewController = {
     getReviewById,
     getReviewsByUserId,
-    createReview
+    createReview,
+    deleteReview
 }

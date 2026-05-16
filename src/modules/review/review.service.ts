@@ -1,3 +1,4 @@
+import { error } from "node:console";
 import { prisma } from "../../lib/prisma";
 
 
@@ -68,8 +69,33 @@ const createReview = async(payload : {
      return result;
 }
 
+const deleteReview = async(reviewId : string, userId : string) =>{
+     const reviewData = await prisma.review.findFirst({
+        where :{
+            id : reviewId,
+            userId
+        },
+        select :{
+            id : true
+        }
+     })
+
+     if(!reviewData){
+        throw new Error("your provided input is invalid")
+     }
+
+     return await prisma.review.delete({
+        where :{
+            id : reviewData.id
+        }
+     })
+
+
+}
+
 export const reviewService = {
     getReviewById,
     getReviewsByUserId,
-    createReview
+    createReview,
+    deleteReview
 }

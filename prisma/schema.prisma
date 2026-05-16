@@ -119,10 +119,10 @@ model Review {
   order   Order?  @relation(fields: [orderId], references: [id])
 
   medicineId String
-  medicine   Medicine @relation(fields: [medicineId], references: [id])
+  medicine   Medicine @relation(fields: [medicineId], references: [id], onDelete: Cascade)
 
   parentId String?
-  parent Review? @relation("ReviewReply", fields: [parentId], references: [id])
+  parent Review? @relation("ReviewReply", fields: [parentId], references: [id], onDelete: Cascade)
   reviewReply Review[] @relation("ReviewReply")
 
 
