@@ -10,12 +10,16 @@ const router = express.Router();
 //get all medicine data
 router.get("/", medicineController.getAllMedicine);
 
-//get individual medicine data details by givin their unique id
 
-router.get("/:medicineId", medicineController.getSingleMedicine)
+router.get("/myMedicine", auth(UserRole.SELLER, UserRole.ADMIN), medicineController.getMyMedicine);
+
+//get individual medicine data details by givin their unique id //ALWAYS PUT THOSE DYNAMIC ROUTE IN THE LAST
+router.get("/:medicineId", medicineController.getSingleMedicine);
+
+
 
 
 //create medicine post
-router.post("/", auth(UserRole.SELLER), medicineController.createMedicine)
+router.post("/", auth(UserRole.SELLER, UserRole.ADMIN), medicineController.createMedicine)
 
 export const medicineRouter: Router = router

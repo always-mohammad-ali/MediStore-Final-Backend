@@ -89,7 +89,35 @@ const getSingleMedicine = async(req : Request, res : Response) =>{
              });
           }
 
+}
 
+//get my medicine
+
+const getMyMedicine = async(req : Request, res : Response) =>{
+    try{
+      const user = req.user;
+
+      if(!user){
+        throw new Error("you are unauthorized")
+      }
+
+     
+
+      const result = await medicineService.getMyMedicine(user?.id as string);
+
+      res.status(201).json({
+        success : true,
+        message : "succeed to fetch my all posted medicine using my id as seller or admin",
+        data : result
+      })
+
+    }catch(error){
+        console.log(error)
+        res.status(404).json({
+            success : true,
+            message : "failed to fetch my all posted medicine using my id as seller or admin"
+        })
+    }
 }
 
 
@@ -124,5 +152,7 @@ const createMedicine = async(req: Request, res: Response) =>{
 export const medicineController = {
     getAllMedicine,
     getSingleMedicine,
+    getMyMedicine,
     createMedicine
+
 }

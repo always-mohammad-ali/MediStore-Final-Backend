@@ -167,6 +167,18 @@ const getSingleMedicine = async(medicineId : string) =>{
 
 }
 
+const getMyMedicine = async(userId : string) =>{
+    return await prisma.medicine.findMany({
+        where : {
+            userId : userId
+        },
+        orderBy : {
+            createdAt : "desc"
+        }
+        
+    })
+}
+
 
 
 //CREATE MEDICINE
@@ -183,5 +195,6 @@ const createMedicine = async(data: Omit <Medicine, "id" | "createdAt" | "updated
 export const medicineService = {
     getAllMedicine,
     getSingleMedicine,
+    getMyMedicine,
     createMedicine
 }
