@@ -18,6 +18,23 @@ const getReviewById = async(reviewId :string) =>{
      })
 }
 
+const getReviewsByUserId = async(userId : string) =>{
+    return await prisma.review.findMany({
+         where : {
+            userId
+         },
+         orderBy : { createdAt : "desc"},
+         include : {
+           medicine : {
+            select : {
+                id : true,
+                medicineName : true
+            }
+           }
+         }
+    })
+}
+
 
 const createReview = async(payload : {
    description ?: string,
@@ -53,5 +70,6 @@ const createReview = async(payload : {
 
 export const reviewService = {
     getReviewById,
+    getReviewsByUserId,
     createReview
 }

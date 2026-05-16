@@ -28,6 +28,27 @@ const getReviewById = async(req : Request, res : Response) =>{
     }
 }
 
+const getReviewsByUserId = async(req: Request, res: Response) =>{
+    try{
+        const { userId } = req.params;
+
+        const result = await reviewService.getReviewsByUserId(userId as string);
+
+        res.status(200).json({
+            success : true,
+            message : "successfully we get all comments by a user id",
+            data : result
+        })
+
+    }catch(error){
+        res.status(401).json({
+            success : false,
+            message : "user id fetch failed",
+            details : error
+        })
+    }
+}
+
 
 const createReview = async(req : Request, res : Response) =>{
     try{
@@ -55,5 +76,6 @@ const createReview = async(req : Request, res : Response) =>{
 
 export const reviewController = {
     getReviewById,
+    getReviewsByUserId,
     createReview
 }
