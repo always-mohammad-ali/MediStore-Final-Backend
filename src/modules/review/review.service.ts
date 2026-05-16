@@ -1,5 +1,6 @@
 import { error } from "node:console";
 import { prisma } from "../../lib/prisma";
+import { REVIEWSTATUS } from "../../../generated/prisma/enums";
 
 
 const getReviewById = async(reviewId :string) =>{
@@ -119,10 +120,27 @@ const updateReview = async(reviewId : string, userId : string, reviewData : {des
 
 }
 
+const moderateReview = async(reviewId : string, reviewData : {reviewStatus : REVIEWSTATUS}) =>{
+    
+    await prisma.review.findUniqueOrThrow({
+        where : {
+            id : reviewId
+        }
+    })
+
+    return await prisma.review.update({
+        where :{
+            id : reviewId
+        },
+        data : reviewData
+    })
+}
+
 export const reviewService = {
     getReviewById,
     getReviewsByUserId,
     createReview,
     deleteReview,
-    updateReview
+    updateReview,
+    moderateReview
 }

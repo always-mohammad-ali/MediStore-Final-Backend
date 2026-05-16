@@ -125,10 +125,34 @@ const updateReview = async(req : Request, res : Response) =>{
       }
 }
 
+
+const moderateReview = async(req : Request, res : Response) =>{
+    try{
+      const { reviewId } = req.params;
+
+      const result = await reviewService.moderateReview(reviewId as string, req.body)
+
+      res.status(201).json({
+        success : true,
+        message : "modify review status by only admin succeed",
+        data : result
+      })
+
+
+    }catch(error){
+        res.status(404).json({
+            success : false,
+            message : "modify review status by admin failed",
+            details : error
+        })
+    }
+}
+
 export const reviewController = {
     getReviewById,
     getReviewsByUserId,
     createReview,
     deleteReview,
-    updateReview
+    updateReview,
+    moderateReview
 }

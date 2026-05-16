@@ -14,6 +14,8 @@ router.delete("/:reviewId", auth(UserRole.CUSTOMER, UserRole.ADMIN), reviewContr
 
 router.patch("/:reviewId", auth(UserRole.CUSTOMER, UserRole.ADMIN), reviewController.updateReview);
 
+router.patch("/:reviewId/moderate", auth(UserRole.ADMIN), reviewController.moderateReview);
+
 
 
 
