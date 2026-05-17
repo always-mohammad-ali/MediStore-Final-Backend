@@ -3,6 +3,7 @@ import { medicineService } from "./medicine.service";
 import { MEDICINESTATUS } from "../../../generated/prisma/enums";
 import paginationSortingHelper from "../../helpers/paginationSortingHelper";
 import { success } from "better-auth";
+import { UserRole } from "../../middleware/auth";
 
 
 const getAllMedicine = async(req: Request, res: Response) =>{
@@ -163,7 +164,9 @@ const updateMedicine = async(req : Request, res : Response) =>{
 
         const { medicineId } = req.params;
 
-        const result = await medicineService.updateMedicine(user.id as string, medicineId as string, req.body)
+        const isAdmin = user.role === UserRole.ADMIN;
+
+        const result = await medicineService.updateMedicine(user.id as string, medicineId as string, req.body, isAdmin)
 
         res.status(201).json({
             success : true,

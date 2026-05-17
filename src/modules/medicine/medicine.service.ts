@@ -233,7 +233,7 @@ const createMedicine = async(data: Omit <Medicine, "id" | "createdAt" | "updated
 
 //UPDATE MEDICINE
 
-const updateMedicine = async(userId : string, medicineId : string, medicineData : Partial<Medicine>) =>{
+const updateMedicine = async(userId : string, medicineId : string, medicineData : Partial<Medicine>, isAdmin : boolean) =>{
     const medicineDatax = await prisma.medicine.findUniqueOrThrow({
         where : {
             id : medicineId
@@ -243,9 +243,15 @@ const updateMedicine = async(userId : string, medicineId : string, medicineData 
             userId : true,
         }
     })
+    
+    //if(user is not admin && user is not owner of the post)
 
-    if(medicineDatax.userId !== userId){
-        throw new Error("you don't have permission to update data as you id doesn't match with medicine-posts id");
+    if( !isAdmin && (medicineDatax.userId !== userId) ){
+        throw new Error("you don't have permission to update data as your id doesn't match with medicine-posts id");
+    }
+
+    if(!isAdmin){
+        delete medicineData.isFeatured
     }
 
     return await prisma.medicine.update({
