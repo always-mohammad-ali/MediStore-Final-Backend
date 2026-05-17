@@ -173,7 +173,7 @@ const createMedicine = async(req: Request, res: Response, next : NextFunction) =
 
 //update Medicine
 
-const updateMedicine = async(req : Request, res : Response) =>{
+const updateMedicine = async(req : Request, res : Response, next : NextFunction) =>{
     try{
 
         const user = req.user;
@@ -196,11 +196,7 @@ const updateMedicine = async(req : Request, res : Response) =>{
 
     }catch(error){
         const errorMessage = (error instanceof Error) ? error.message : "update medicine post failed"
-        res.status(404).json({
-            success : false,
-            message : errorMessage,
-            details : error
-        })
+        next()
     }
 }
 
