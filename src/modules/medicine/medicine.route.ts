@@ -10,8 +10,11 @@ const router = express.Router();
 //get all medicine data
 router.get("/", medicineController.getAllMedicine);
 
-
+//get my medicine
 router.get("/myMedicine", auth(UserRole.SELLER, UserRole.ADMIN), medicineController.getMyMedicine);
+
+//get all stats
+router.get("/stat", auth(UserRole.ADMIN), medicineController.getStat);
 
 //create medicine post
 router.post("/", auth(UserRole.SELLER, UserRole.ADMIN), medicineController.createMedicine)

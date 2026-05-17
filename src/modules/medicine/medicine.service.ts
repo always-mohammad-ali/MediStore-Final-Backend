@@ -219,6 +219,56 @@ const getMyMedicine = async(userId : string) =>{
 }
 
 
+//get stat
+
+const getStat = async() =>{
+     return await prisma.$transaction(async (tx) =>{
+       
+    /* 
+       const totalMedicine = await tx.medicine.count();
+        const publishedMedicine = await tx.medicine.count({
+            where :{
+                status : MEDICINESTATUS.PUBLISHED
+            }
+        })
+
+         const draftMedicine = await tx.medicine.count({
+            where :{
+                status : MEDICINESTATUS.DRAFT
+            }
+        })
+
+        const archivedMedicine = await tx.medicine.count({
+            where :{
+                status : MEDICINESTATUS.ARCHIVED
+            }
+        })
+
+    */
+
+        const [totalMedicine, publishedMedicine, draftMedicine, archivedMedicine, totalReviews, totalApprovedReviews] = await Promise.all([
+             await tx.medicine.count(),
+             await tx.medicine.count({  where :{ status : MEDICINESTATUS.PUBLISHED  }}),
+             await tx.medicine.count({  where :{ status : MEDICINESTATUS.DRAFT      }}),
+             await tx.medicine.count({  where :{ status : MEDICINESTATUS.ARCHIVED   }}),
+             await tx.review.count(),
+             await tx.review.count({ where : {reviewStatus : REVIEWSTATUS.APPROVED  }})
+
+        ])
+
+         return {
+            totalMedicine,
+            publishedMedicine,
+            draftMedicine,
+            archivedMedicine,
+            totalReviews,
+            totalApprovedReviews
+         }
+
+     })
+
+}
+
 
 //CREATE MEDICINE
 const createMedicine = async(data: Omit <Medicine, "id" | "createdAt" | "updatedAt" | "userId">, userSessionId : string) => {
@@ -293,6 +343,7 @@ export const medicineService = {
     getAllMedicine,
     getSingleMedicine,
     getMyMedicine,
+    getStat,
     createMedicine,
     updateMedicine,
     deleteMedicine

@@ -122,6 +122,29 @@ const getMyMedicine = async(req : Request, res : Response) =>{
 }
 
 
+//get all stat
+
+const getStat = async(req : Request, res : Response) =>{
+    try{
+      
+        const result = await medicineService.getStat();
+
+        res.status(201).json({
+            success : true,
+            message : "stat data successfully fetched",
+            data : result
+        })
+
+    }catch(error){
+        const errorMessage = (error instanceof Error) ? error.message : "failed to fetch stat"
+        res.status(404).json({
+            success : true,
+            message : errorMessage,
+            details : error
+        })
+    }
+}
+
 //create Medicine
 
 const createMedicine = async(req: Request, res: Response) =>{
@@ -220,6 +243,7 @@ export const medicineController = {
     getAllMedicine,
     getSingleMedicine,
     getMyMedicine,
+    getStat,
     createMedicine,
     updateMedicine,
     deleteMedicine
