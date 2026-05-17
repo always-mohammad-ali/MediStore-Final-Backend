@@ -5,6 +5,7 @@ import { toNodeHandler } from "better-auth/node";
 import { auth } from "./lib/auth";
 import cors from "cors"
 import { reviewRouter } from "./modules/review/review.route";
+import errorHandler from "./middleware/globalErrorHandler";
 
 const app: Application = express();
 
@@ -27,5 +28,7 @@ app.use("/reviews", reviewRouter)
 app.get("/", (req, res) =>{
     res.send("hello, world")
 })
+
+app.use(errorHandler)
 
 export default app;

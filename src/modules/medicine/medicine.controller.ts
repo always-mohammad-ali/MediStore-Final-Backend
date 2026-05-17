@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { medicineService } from "./medicine.service";
 import { MEDICINESTATUS } from "../../../generated/prisma/enums";
 import paginationSortingHelper from "../../helpers/paginationSortingHelper";
@@ -147,7 +147,7 @@ const getStat = async(req : Request, res : Response) =>{
 
 //create Medicine
 
-const createMedicine = async(req: Request, res: Response) =>{
+const createMedicine = async(req: Request, res: Response, next : NextFunction) =>{
     try{
         console.log(req.user)
 
@@ -165,10 +165,7 @@ const createMedicine = async(req: Request, res: Response) =>{
             result
         })
     }catch(error){
-        res.status(404).json({
-            message : "medicine creation failed",
-            error : error
-        })
+        next(error)
     }
     
 }
