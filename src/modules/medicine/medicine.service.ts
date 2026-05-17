@@ -1,6 +1,7 @@
 import { Medicine, MEDICINESTATUS, REVIEWSTATUS } from "../../../generated/prisma/client"
 import { MedicineWhereInput } from "../../../generated/prisma/models";
 import { prisma } from "../../lib/prisma"
+import { UserRole } from "../../middleware/auth";
 
 
 const getAllMedicine = async({search, tags, isFeatured, status, userId, page, limit, skip, sortBy, sortOrder} :
@@ -246,13 +247,18 @@ const getStat = async() =>{
 
     */
 
-        const [totalMedicine, publishedMedicine, draftMedicine, archivedMedicine, totalReviews, totalApprovedReviews] = await Promise.all([
+        const [totalMedicine, publishedMedicine, draftMedicine, archivedMedicine, totalReviews, totalApprovedReviews, totalUser, totalCustomer, totalAdmin, totalSeller, totalViews] = await Promise.all([
              await tx.medicine.count(),
              await tx.medicine.count({  where :{ status : MEDICINESTATUS.PUBLISHED  }}),
              await tx.medicine.count({  where :{ status : MEDICINESTATUS.DRAFT      }}),
              await tx.medicine.count({  where :{ status : MEDICINESTATUS.ARCHIVED   }}),
              await tx.review.count(),
-             await tx.review.count({ where : {reviewStatus : REVIEWSTATUS.APPROVED  }})
+             await tx.review.count({ where : {reviewStatus : REVIEWSTATUS.APPROVED  }}),
+             await tx.user.count(),
+             await tx.user.count({ where : { role : UserRole.CUSTOMER }}),
+             await tx.user.count({ where : { role : UserRole.ADMIN }}),
+             await tx.user.count({ where : { role : UserRole.SELLER}}),
+             await tx.medicine.aggregate({ _sum : { views : true }})
 
         ])
 
@@ -262,7 +268,12 @@ const getStat = async() =>{
             draftMedicine,
             archivedMedicine,
             totalReviews,
-            totalApprovedReviews
+            totalApprovedReviews,
+            totalUser,
+            totalCustomer,
+            totalAdmin,
+            totalSeller,
+            totalViews : totalViews._sum.views
          }
 
      })

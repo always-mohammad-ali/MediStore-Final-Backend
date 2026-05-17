@@ -1,0 +1,18 @@
+model Category {
+  id           String @id @default(uuid())
+  categoryName TYPE
+  description  String @db.Text
+
+  medicine Medicine[]
+
+  @@index([categoryName])
+  @@map("categories")
+}
+
+enum TYPE {
+  ASPIRIN
+  OMEPRAZOLE
+  FENTANYL
+  STEROIDS
+  VITAMIN
+}

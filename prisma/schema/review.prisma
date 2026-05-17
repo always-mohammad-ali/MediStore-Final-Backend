@@ -1,0 +1,29 @@
+model Review {
+  id          String  @id @default(uuid())
+  description String? @db.Text
+  rating      Float?
+  reviewStatus REVIEWSTATUS @default(APPROVED)
+  createdAt DateTime @default(now())
+
+  userId String  //better auth
+
+  orderId String?
+  order   Order?  @relation(fields: [orderId], references: [id])
+
+  medicineId String
+  medicine   Medicine @relation(fields: [medicineId], references: [id], onDelete: Cascade)
+
+  parentId String?
+  parent Review? @relation("ReviewReply", fields: [parentId], references: [id], onDelete: Cascade)
+  reviewReply Review[] @relation("ReviewReply")
+
+
+  @@index([rating])
+  @@map("reviews")
+}
+
+enum REVIEWSTATUS {
+  APPROVED
+  BANNED
+}
+

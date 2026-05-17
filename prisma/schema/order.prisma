@@ -1,0 +1,21 @@
+model Order {
+  id          String   @id @default(uuid())
+  totalPrice  Int
+  location    String   @db.VarChar(250)
+  orderStatus STATUS   @default(PENDING)
+  userId      String //better-auth
+
+
+  review Review[]
+  
+  items OrderItem[]
+
+  @@index([orderStatus])
+  @@map("orders")
+}
+
+enum STATUS {
+  PENDING
+  COMPLETE
+  FAILED
+}

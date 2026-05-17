@@ -1,0 +1,23 @@
+model OrderItem{
+  id String @id @default(uuid())
+
+  orderId String
+  order Order @relation(fields: [orderId], references: [id])
+
+  medicineId String
+  medicine Medicine @relation(fields: [medicineId], references: [id])
+
+  quantity Int
+  price Int
+
+  createdAt DateTime @default(now())
+
+  @@index([orderId])
+  @@index([medicineId])
+
+  @@map("Order-Items")
+  
+}
+
+
+
