@@ -262,10 +262,38 @@ const updateMedicine = async(userId : string, medicineId : string, medicineData 
     })
 }
 
+
+//delete medicine
+
+const deleteMedicine = async(medicineId : string, userId : string, isAdmin : boolean) =>{
+     
+    const medicineData = await prisma.medicine.findUniqueOrThrow({
+       where : {
+        id : medicineId
+       },
+       select : {
+        id : true,
+        userId : true
+       }
+    })
+
+    if(!isAdmin && (userId !== medicineData.userId)){
+        throw new Error("you don't have permission to delete data as your id doesn't match with medicine-posts id")
+    }
+
+    return await prisma.medicine.delete({
+        where : {
+            id : medicineId
+        }
+    })
+}
+
+
 export const medicineService = {
     getAllMedicine,
     getSingleMedicine,
     getMyMedicine,
     createMedicine,
-    updateMedicine
+    updateMedicine,
+    deleteMedicine
 }
