@@ -6,6 +6,7 @@ import { auth } from "./lib/auth";
 import cors from "cors"
 import { reviewRouter } from "./modules/review/review.route";
 import errorHandler from "./middleware/globalErrorHandler";
+import { notFound } from "./middleware/notFound";
 
 const app: Application = express();
 
@@ -29,6 +30,9 @@ app.get("/", (req, res) =>{
     res.send("hello, world")
 })
 
+app.use(notFound)
+
+//always use errorHandler at the lowest bottom of app.ts
 app.use(errorHandler)
 
 export default app;
